@@ -1,4 +1,5 @@
 const express = require("express");
+const JobModel = require("../models/JobModel");
 
 const router = express.Router();
 
@@ -17,10 +18,15 @@ router.get("/:id", (req, res) => {
 });
 
 //Post a new job
-router.post("/", (req, res) => {
-  res.json({
-    msg: "Post new job",
-  });
+router.post("/", async (req, res) => {
+  const { title, load, reps } = req.body;
+
+  try {
+    const jobmodel = await JobModel.create({ title, load, reps });
+    res.status(200).json(jobmodel);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 });
 
 //Delete a job
